@@ -38,7 +38,6 @@ header {
     font-weight: bold;
 }
 
-/* Hero Section */
 .hero {
     display: flex;
     align-items: center;
@@ -98,3 +97,49 @@ footer {
     font-size: 0.8rem;
     color: #555;
 }
+
+.about-section {
+    background: linear-gradient(rgba(43, 23, 15, 0.8), rgba(43, 23, 15, 0.8)), url('batangas-state-uni.jpg');
+    background-size: cover;
+    justify-content: flex-start;
+}
+
+.about-nav { margin: 0 auto; margin-top: 20px; }
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Matches the text being on the right in your pic */
+    padding: 50px 10%;
+    gap: 20px;
+}
+
+.about-card, .skills-card {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 650px;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skills-title {
+    font-family: serif;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.section-footer {
+    background: #000;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5%;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Buttons */
+.btn-primary { background: #5c3a21; color: white; margin-right: 10px; }
+.btn-secondary { background: #1a0f0a; color: #fff; border: 1px solid #3d261c; }
