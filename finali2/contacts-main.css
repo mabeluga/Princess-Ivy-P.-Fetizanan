@@ -1,0 +1,427 @@
+:root {
+    color-scheme: dark;
+    --bg: #241912;
+    --surface: #402c22;
+    --surface-soft: #3b2a21;
+    --surface-strong: #1f1410;
+    --accent: #8f6b3f;
+    --accent-strong: #b38652;
+    --text: #ebddcc;
+    --text-muted: #c5b29c;
+    --border: rgba(255,255,255,0.08);
+    --footnote-height: 56px;
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    height: 100vh;
+    overflow: hidden; /* remove scrollbars */
+}
+
+
+body {
+    /* Primary page font: Instrument Serif (fallback to Georgia/serif) */
+    font-family: 'Instrument Serif', Georgia, serif;
+    background: var(--surface-strong); /* solid page background */
+    color: var(--text);
+}
+
+body::before { display: none; }
+
+.main-container {
+    position: relative;
+    /* use smaller inset so the panel doesn't create an outer box */
+    margin: 1px;
+    width: 100%;
+    padding: 40px 3px calc(var(--footnote-height) - 8px); /* reserve slightly less space for fixed footnote */
+    background: var(--surface-strong); /* remove outer rectangle */
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Outer rounded frame (visual border) for the contacts page */
+.main-container::before {
+    content: "";
+    position: absolute;
+    inset: 10px; /* small inset to show inner content spacing */
+    border-radius: 48px;
+    border: 4px solid rgba(255,255,255,0.08);
+    pointer-events: none;
+    box-sizing: border-box;
+    /* place overlay above the main content but below the fixed footnote */
+    z-index: 9000;
+}
+
+.project-nav {
+    display: flex;
+    gap: 12px;
+    padding: 8px;
+    margin-bottom: 36px;
+    /* brown-tinted pill background, not bright white */
+    background: rgb(255 255 255 / 27%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 999px;
+    position: relative;
+    width: min(900px, 90%);
+    max-width: 1200px;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 36px; /* center the nav container and add gap below */
+}
+
+.project-nav a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+    z-index: 10;
+    font-size: 19px; /* control panel labels at 19px */
+}
+
+.project-nav .nav-selection-slider {
+    position: absolute;
+    top: 8px; bottom: 8px; left: 8px;
+    width: calc(25% - 16px + 28px);
+    background: #1f1410;
+    backdrop-filter: blur(8px) saturate(1.05);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 999px;
+    z-index: 0;
+    transition: transform 0.36s cubic-bezier(.2,1,.2,1);
+}
+
+.project-nav a { position: relative; z-index: 1; }
+
+/* Keep navigation panel in a sans font for clarity */
+.project-nav,
+.project-nav a {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* position the slider for the Contacts page (fourth tab) */
+body.contacts-page .project-nav .nav-selection-slider {
+    transform: translateX(300%);
+    width: calc(25.4% - 46px + 39px);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 1.02fr) minmax(320px, 0.98fr);
+    gap: 42px;
+    align-items: start;
+    background: #34241b; /* unified single rectangle background */
+    border: 1px solid rgba(0,0,0,0.28);
+    border-radius: 0;
+    padding: 70px; /* internal spacing for both sides */
+    /* pull the panel down so its bottom border meets the top of the fixed footnote */
+    /* small positive offset reduces visible gap (8px) */
+    margin-bottom: calc(-1 * var(--footnote-height) + 8px);
+    position: relative; /* needed for the divider pseudo-element */
+}
+
+/* Full-bleed modifier: extend the panel to the site's left/right endpoints
+   (cancels typical page horizontal gaps of 2rem) */
+.contact-grid.full-bleed {
+    /* span the full viewport width and align to viewport edges */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    max-width: none;
+    /* remove all corner rounding so sides are straight to the viewport edges */
+    border-radius: 0;
+}
+
+@media (max-width: 860px) {
+    .contact-grid.full-bleed {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+    }
+}
+
+.info-side,
+.form-side {
+    background: transparent; /* remove separate backgrounds */
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+/* Vertical divider between left and right columns.
+   Positioned to sit in the middle of the grid gap so it starts/ends
+   at the panel's top/bottom padding (endpoints align with panel). */
+.contact-grid::after {
+    content: "";
+    position: absolute;
+    top: 28px;
+    bottom: 28px;
+    left: calc(50% + 21px); /* center of the 42px gap */
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+@media (max-width: 860px) {
+    .contact-grid::after { display: none; }
+}
+
+/* On the contacts page, anchor the panel flush to the left and keep right-side rounding */
+body.contacts-page .contact-grid {
+    margin-left: 0;
+    margin-right: auto;
+    width: 100%;
+    box-sizing: border-box;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Footnote / small print inside the unified panel */
+.contact-grid .footnote {
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+
+/* Full-width footnote bar that spans the panel interior from left to right.
+   It is placed at the very bottom of the panel and aligns to the panel's
+   rounded corners by using negative horizontal margins matching the panel padding. */
+.contact-grid .panel-footnote {
+    background: var(--surface-strong);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 28px;
+    margin: 18px 0 0 0; /* sit inside the panel, no negative offset */
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-grid .panel-footnote .redline {
+    color: #e14b4b; /* red accent for the left word */
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.contact-grid .panel-footnote .year-range {
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+@media (max-width: 860px) {
+    .contact-grid .panel-footnote { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
+}
+
+/* Full-width fixed footnote bar at the very bottom of the website */
+.about-footnote {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: var(--footnote-height);
+    padding: 0 50px;
+    background: transparent; /* remove light background behind the footnote */
+    color: #ffffff; /* footnote text in white */
+    z-index: 10000;
+    box-shadow: none;
+}
+.about-footnote { font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.about-footnote .redline {
+    color: #ffffff; /* make redline white as requested */
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+.about-footnote .year-range {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .about-footnote { padding: 10px 16px; }
+    .about-footnote .year-range { font-size: 0.95rem; }
+}
+
+/* If the global footer is placed inside the contact panel, style it to fit */
+.contact-grid .footer-bottom {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Header Box with the brown highlight */
+.contact-header-box {
+    display: inline-flex;
+    align-items: center;
+    background: #4f3312; /* restored light highlight */
+    border: 1px solid rgba(191,145,97,0.12); /* subtle border */
+    border-radius: 0 20px 20px 0; /* rounded on the right end only */
+    padding: 14px 100px;
+    margin-bottom: 36px;
+    /* shift the header left so its left edge aligns with the panel's left edge */
+    margin-left: -90px;
+}
+
+.contact-title {
+    font-family: Georgia, serif;
+    font-size: clamp(2rem, 2.3vw, 2.5rem);
+    margin: 0;
+    letter-spacing: 0.08em;
+}
+
+/* Unified color for names and contact items */
+.contact-title,
+.social-list li,
+.form-side label {
+    color: #ffffff;
+}
+
+/* Social List Icons */
+.social-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+    color: #ffffff;
+    font-size: 1.30rem;
+}
+
+.social-list li:last-child {
+    margin-bottom: 0;
+}
+
+.icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.48);
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1rem;
+    /* remove light inset so no white seam shows through */
+    box-shadow: none;
+    border: 1px solid rgba(0,0,0,0.28);
+}
+
+/* Form Styling */
+/* form-side background removed — unified panel uses .contact-grid */
+.form-side {
+    background: transparent;
+}
+
+.contact-form {
+    display: grid;
+    gap: 18px;
+}
+
+.form-group {
+    display: grid;
+    gap: 10px;
+}
+
+.form-side label {
+    font-size: 1.30rem;
+    color: #ffffff;
+}
+
+.input-field {
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.28);
+    border-radius: 18px;
+    background: #4f3312;
+    color: var(--text);
+    padding: 14px 16px;
+    font-size: 0.98rem;
+}
+
+.input-field:focus,
+textarea:focus {
+    outline: none;
+    border-color: rgba(191, 145, 97, 0.9);
+    box-shadow: 0 0 0 4px rgba(191, 145, 97, 0.12);
+}
+
+.message-area {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.submit-btn {
+    justify-self: end;
+    padding: 12px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(191, 145, 97, 0.8);
+    background: transparent;
+    color: #ffffff; /* make submit/control button text white */
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.28s, color 0.28s, transform 0.2s;
+}
+
+.submit-btn:hover {
+    background: rgba(191, 145, 97, 0.14);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+
+/* Footer  */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 42px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+@media (max-width: 860px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-nav {
+        justify-content: stretch;
+    }
+
+    .project-nav a {
+        width: 100%;
+    }
+}
